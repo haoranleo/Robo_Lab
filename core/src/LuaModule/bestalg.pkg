@@ -1,0 +1,23 @@
+$#include <fstream>
+$#include <MultiThread.h>
+$#include <singleton.h>
+$#include "VisionModule.h"
+$#include "geometry.h"
+$#include "gpuBestAlgThread.h"
+
+enum {
+	CIRCLE_MODE = 0,
+	RECT_MODE,
+};
+
+
+class CGPUBestAlgThread {
+	CGPUBestAlgThread();
+	~CGPUBestAlgThread();
+	void initialize(CVisionModule* _pVision);
+	CGeoPoint getBestPoint(const CGeoPoint leftUp = CGeoPoint(300,-200),const CGeoPoint rightDown = CGeoPoint(0,200), const int pointKeeperNum = 0, const ReCalModeT& reCalMode = RECT_MODE, bool forceReset = false);
+	void generatePointValue();
+	bool isLastOneValid(const CGeoPoint& p);
+	void setSendPoint(const CGeoPoint passPoint);
+	double getPosPotential(const CGeoPoint p);
+};

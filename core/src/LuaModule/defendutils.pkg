@@ -1,0 +1,23 @@
+$#include "DefendUtils.h"
+
+enum posSide{
+	POS_SIDE_LEFT = 0,
+	POS_SIDE_RIGHT= 1,
+	POS_SIDE_MIDDLE= 2
+};
+
+namespace DefendUtils{
+	CGeoPoint reversePoint(const CGeoPoint& p);
+	double calcBlockAngle(const CGeoPoint& target,const CGeoPoint& player);
+	bool leftCirValid(const CGeoPoint& p);
+	bool rightCirValid(const CGeoPoint& p);
+	int getEnemyShooter();
+	CGeoLine getDefenceTargetAndLine(CGeoPoint& RdefenceTarget,double& RdefendDir);
+	CGeoPoint calcDefenderPoint(const CGeoPoint Rtarget,const double Rdir,const posSide Rside);
+	CGeoPoint calcGoaliePoint(const CGeoPoint Rtarget,const double Rdir,const int mode,CGeoPoint laststoredpoint,double RdefendDir);
+	CGeoPoint calcMiddlePoint(const CGeoPoint Rtarget,const double Rdir,double Rradius);
+	CGeoPoint getCornerAreaPos();
+	CGeoPoint getIndirectDefender(double radius,CGeoPoint leftUp,CGeoPoint rightDown,int mode);
+	CGeoPoint getMiddleDefender(double bufferX);
+	CGeoPoint getDefaultPos(int index);
+}

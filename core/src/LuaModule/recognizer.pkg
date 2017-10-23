@@ -1,0 +1,7 @@
+$#include "Recognizer.h"
+
+class CRecognizer{
+	CRecognizer();
+	string getResult();
+	bool resultChanged();
+};

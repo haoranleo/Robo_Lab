@@ -1,0 +1,34 @@
+$#include "DefPos2013.h"
+
+typedef struct  
+{
+	CGeoPoint leftD;	
+	CGeoPoint rightD;	
+	CGeoPoint middleD;
+	CGeoPoint singleD;
+	CGeoPoint goalieD;
+	CGeoPoint sideD;	
+
+	CGeoPoint getLeftPos(){return leftD;}
+	
+	CGeoPoint getRightPos(){return rightD;}
+	
+	CGeoPoint getMiddlePos(){return middleD;}
+
+	CGeoPoint getSinglePos(){return singleD;}
+
+	CGeoPoint getGoaliePos(){return goalieD;}
+
+	CGeoPoint getSidePos(){return sideD;}
+} defend2013;
+
+class CDefPos2013:CAtomPos
+{
+	CDefPos2013();
+	~CDefPos2013();	
+
+	void generatePos(const CVisionModule* pVision);
+
+	defend2013 getDefPos2013(const CVisionModule* pVision);
+};
+
