@@ -12,32 +12,32 @@
 #include <TaskMediator.h>
 
 namespace{
-	const double TEAMMATE_AVOID_DIST = Param::Vehicle::V2::PLAYER_SIZE + 4.0f; // 2014/03/13 ÐÞ¸Ä£¬ÎªÁË¼õÉÙstopµÄÊ±ºò¿¨×¡µÄ¸ÅÂÊ yys
+	const double TEAMMATE_AVOID_DIST = Param::Vehicle::V2::PLAYER_SIZE + 4.0f; // 2014/03/13 ä¿®æ”¹ï¼Œä¸ºäº†å‡å°‘stopçš„æ—¶å€™å¡ä½çš„æ¦‚çŽ‡ yys
 	const double OPP_AVOID_DIST = Param::Vehicle::V2::PLAYER_SIZE + 2.5f;
 	const double BALL_AVOID_DIST = Param::Field::BALL_SIZE + 1.5f;
-	//const double VELMIN = 1.0f; //×îÐ¡ËÙ¶È
-	path_planner pathPlanner[Param::Field::MAX_PLAYER];  //ERRTËã·¨ÊµÀý
+	//const double VELMIN = 1.0f; //æœ€å°é€Ÿåº¦
+	path_planner pathPlanner[Param::Field::MAX_PLAYER];  //ERRTç®—æ³•å®žä¾‹
 }
 
 CRRTPathPlanner::CRRTPathPlanner(const CVisionModule* pVision, const TaskT& task, const double avoidLength) {
 	int player = task.executor;
-	CGeoPoint target = task.player.pos; // È«¾ÖÄ¿±êÅÜÎ»µã
+	CGeoPoint target = task.player.pos; // å…¨å±€ç›®æ ‡è·‘ä½ç‚¹
 	int flags = task.player.flag;
-	int shootCar = task.ball.Sender; // ³öÇòÕßºÅÂë
+	int shootCar = task.ball.Sender; // å‡ºçƒè€…å·ç 
 
-	obstacles obs(avoidLength);  // ÕÏ°­Îï
+	obstacles obs(avoidLength);  // éšœç¢ç‰©
 	vector2f playerPos(pVision->OurPlayer(player).X(), pVision->OurPlayer(player).Y());
 	vector2f playerVel(pVision->OurPlayer(player).VelX(), pVision->OurPlayer(player).VelY());
 	vector2f target_pos(target.x(), target.y());
 
-	// Èç¹ûÊÇ¶ã±ÜÉäÃÅ
+	// å¦‚æžœæ˜¯èº²é¿å°„é—¨
 	if (flags & PlayerStatus::AVOID_SHOOTLINE) {
 		const PlayerVisionT& shooter = pVision->OurPlayer(shootCar);
-		// ÇòÃÅÖÐÐÄ
+		// çƒé—¨ä¸­å¿ƒ
 		obs.add_long_circle(vector2f(shooter.Pos().x(), shooter.Pos().y()), vector2f(Param::Field::PITCH_LENGTH/2, 0.0f), vector2f(0.0f, 0.0f), 3.0f, 1);
-		// ÇòÃÅ×óÃÅÖù
+		// çƒé—¨å·¦é—¨æŸ±
 		obs.add_long_circle(vector2f(shooter.Pos().x(), shooter.Pos().y()), vector2f(Param::Field::PITCH_LENGTH/2, Param::Field::GOAL_WIDTH/2.0), vector2f(0.0f, 0.0f), 3.0f, 1);
-		// ÇòÃÅÓÒÃÅÖù
+		// çƒé—¨å³é—¨æŸ±
 		obs.add_long_circle(vector2f(shooter.Pos().x(), shooter.Pos().y()), vector2f(Param::Field::PITCH_LENGTH/2, -Param::Field::GOAL_WIDTH/2.0), vector2f(0.0f, 0.0f), 3.0f, 1);
 	}
 
@@ -68,11 +68,11 @@ CRRTPathPlanner::CRRTPathPlanner(const CVisionModule* pVision, const TaskT& task
 		}
 	}
 
-	// ½ûÇø ºÍ ÃÅÖù
+	// ç¦åŒº å’Œ é—¨æŸ±
 	if((true || flags & PlayerStatus::DODGE_OUR_DEFENSE_BOX) && (task.executor != PlayInterface::Instance()->getNumbByRealIndex(TaskMediator::Instance()->goalie()))) {
-		// ÎÒ·½½ûÇø
+		// æˆ‘æ–¹ç¦åŒº
 		obs.add_long_circle(vector2f(-Param::Field::PITCH_LENGTH / 2, -Param::Field::PENALTY_AREA_L / 2), vector2f(-Param::Field::PITCH_LENGTH / 2, Param::Field::PENALTY_AREA_L / 2), vector2f(0.0, 0.0), Param::Field::PENALTY_AREA_R - 5.0f, 1);
-		// ¶Ô·½ÇòÃÅÖù
+		// å¯¹æ–¹çƒé—¨æŸ±
 		obs.add_circle(vector2f(Param::Field::PITCH_LENGTH / 2, -Param::Field::GOAL_WIDTH), vector2f(0.0, 0.0), 1.0 * Param::Vehicle::V2::PLAYER_SIZE, 1);
 		obs.add_circle(vector2f(Param::Field::PITCH_LENGTH / 2, Param::Field::GOAL_WIDTH), vector2f(0.0, 0.0), 1.0 * Param::Vehicle::V2::PLAYER_SIZE, 1);
 	}
@@ -96,9 +96,9 @@ CRRTPathPlanner::CRRTPathPlanner(const CVisionModule* pVision, const TaskT& task
 	state result;
 	initial.pos = playerPos;
 	goal.pos = target_pos;
-
-//	pathPlanner[player - 1].init(200, 150, 0.05, 0.55, Param::Field::MAX_PLAYER_SIZE, initial);  // ÐÞ¸ÄÁË²ÎÊý£¬ 2014-03-09£¬ YYS
-	pathPlanner[player - 1].init(400, 100, 0.15, 0.75, Param::Field::MAX_PLAYER_SIZE, initial);  // ²âÊÔ£¬ 2014-07-07£¬ zhyaic
+	goal.pos=target_pos;
+//	pathPlanner[player - 1].init(200, 150, 0.05, 0.55, Param::Field::MAX_PLAYER_SIZE, initial);  // ä¿®æ”¹äº†å‚æ•°ï¼Œ 2014-03-09ï¼Œ YYS
+	pathPlanner[player - 1].init(400, 100, 0.15, 0.75, Param::Field::MAX_PLAYER_SIZE, initial);  // æµ‹è¯•ï¼Œ 2014-07-07ï¼Œ zhyaic
 
 	result= pathPlanner[player - 1].plan(&obs, 1, initial, playerVel, goal);
 	GDebugEngine::Instance()->gui_debug_x(CGeoPoint(result.pos.x, result.pos.y), COLOR_GREEN);
@@ -106,5 +106,5 @@ CRRTPathPlanner::CRRTPathPlanner(const CVisionModule* pVision, const TaskT& task
 	tempVel = pathPlanner[player - 1].get_vel();
 	_vel = CVector(tempVel.x, tempVel.y);
 	_path.clear();
-	_path.push_back(CGeoPoint(result.pos.x, result.pos.y)); // ¼ÓÈëÂ·¾¶µã
+	_path.push_back(CGeoPoint(result.pos.x, result.pos.y)); // åŠ å…¥è·¯å¾„ç‚¹
 }
