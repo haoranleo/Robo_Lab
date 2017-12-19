@@ -96,7 +96,7 @@ CRRTPathPlanner::CRRTPathPlanner(const CVisionModule* pVision, const TaskT& task
 	state result;
 	initial.pos = playerPos;
 	goal.pos = target_pos;
-	//goal.pos=target_pos;
+	
 //	pathPlanner[player - 1].init(200, 150, 0.05, 0.55, Param::Field::MAX_PLAYER_SIZE, initial);  // 修改了参数， 2014-03-09， YYS
 	pathPlanner[player - 1].init(400, 100, 0.15, 0.75, Param::Field::MAX_PLAYER_SIZE, initial);  // 测试， 2014-07-07， zhyaic
 
